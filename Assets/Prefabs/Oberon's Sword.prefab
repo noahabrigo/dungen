@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 3
-  name: Oberon's Sword
+  nm: Oberon's Sword
+  moneyValue: 0
 --- !u!61 &5885686182796256370
 BoxCollider2D:
   m_ObjectHideFlags: 0

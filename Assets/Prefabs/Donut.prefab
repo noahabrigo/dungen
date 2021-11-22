@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
-  name: Randi's Donut
+  nm: Odin's Donut
+  moneyValue: 0
 --- !u!61 &2450351541879041236
 BoxCollider2D:
   m_ObjectHideFlags: 0

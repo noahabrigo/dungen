@@ -180,7 +180,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
-  name: Odin's Burger
+  nm: Boogie Burger
+  moneyValue: 0
 --- !u!61 &1378900508557339748
 BoxCollider2D:
   m_ObjectHideFlags: 0

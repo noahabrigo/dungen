@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  name: Ruby
+  nm: Ruby
+  moneyValue: 15
 --- !u!61 &1374627686904571657
 BoxCollider2D:
   m_ObjectHideFlags: 0

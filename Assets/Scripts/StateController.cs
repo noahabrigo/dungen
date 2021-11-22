@@ -8,21 +8,22 @@ public class StateController : MonoBehaviour
     public struct Item {
         public int type;
         public string name;
+        public bool set;
     }
 
     public static Item[] inventory = new Item[10] { 
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" },
-        new Item() { type = 0, name = "-----------------" }
+        new Item() { type = 2, name = "Boogie Burger", set = true},
+        new Item() { type = 3, name = "Oberon's Sword", set = true },
+        new Item() { type = 2, name = "Nero's Pizza", set = true },
+        new Item() { type = 3, name = "Wooden Sword", set = true },
+        new Item() { type = 3, name = "Phantom Sword", set = true },
+        new Item() { type = 0, name = "-----------------", set = false },
+        new Item() { type = 0, name = "-----------------", set = false },
+        new Item() { type = 0, name = "-----------------", set = false },
+        new Item() { type = 0, name = "-----------------", set = false },
+        new Item() { type = 0, name = "-----------------", set = false }
     };
-    public static int invIndex = 0;
+    public static int invIndex = 4;
 
     public static int money = 0;
     public static int belly = 0;
@@ -30,6 +31,7 @@ public class StateController : MonoBehaviour
     public static int exp = 0;
     public static int floorNum = 0;
     public static int health = 10;
+    public static int maxHealth = 10;
 
     public static bool halt = false;
 

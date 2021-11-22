@@ -180,7 +180,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 3
-  name: Wooden Sword
+  nm: Wooden Sword
+  moneyValue: 0
 --- !u!61 &5816254681726288206
 BoxCollider2D:
   m_ObjectHideFlags: 0

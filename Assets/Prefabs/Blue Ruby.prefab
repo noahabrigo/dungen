@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  name: Sapphire
+  nm: Sapphire
+  moneyValue: 10
 --- !u!61 &1098413703072974732
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 3
-  name: Steel Sword
+  nm: Steel Sword
+  moneyValue: 0
 --- !u!61 &875436215118118918
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -5,7 +5,8 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public int type; // (1) money, (2) food, (3) weapon
-    public string name;
+    public string nm;
+    public int moneyValue = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,12 +23,21 @@ public class Item : MonoBehaviour
     {
         PlayerController player = other.GetComponent<PlayerController>();
         if (player != null) {
-            if (StateController.invIndex < StateController.inventory.Length)
+            if(type == 1)
             {
-                StateController.inventory[StateController.invIndex].type = type;
-                StateController.inventory[StateController.invIndex].name = name;
-                StateController.invIndex++;
+                StateController.money += moneyValue;
                 Destroy(gameObject);
+            }
+            else
+            {
+                if (StateController.invIndex < StateController.inventory.Length)
+                {
+                    StateController.inventory[StateController.invIndex].type = type;
+                    StateController.inventory[StateController.invIndex].name = nm;
+                    StateController.inventory[StateController.invIndex].set = true;
+                    StateController.invIndex++;
+                    Destroy(gameObject);
+                }
             }
         }
     }

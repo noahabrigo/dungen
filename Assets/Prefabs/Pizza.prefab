@@ -180,7 +180,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
-  name: Nero's Pizza
+  nm: Nero's Pizza
+  moneyValue: 0
 --- !u!61 &7128735381272114398
 BoxCollider2D:
   m_ObjectHideFlags: 0

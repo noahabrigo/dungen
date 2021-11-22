@@ -180,7 +180,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 3
-  name: Phantom Sword
+  nm: Phantom Sword
+  moneyValue: 0
 --- !u!61 &272614335936865191
 BoxCollider2D:
   m_ObjectHideFlags: 0

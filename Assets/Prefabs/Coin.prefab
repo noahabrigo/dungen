@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  name: Gold Coin
+  nm: Gold Coin
+  moneyValue: 1
 --- !u!61 &989846228497077708
 BoxCollider2D:
   m_ObjectHideFlags: 0
