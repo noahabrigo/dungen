@@ -97,9 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ca02ed6a9301748bbb411f80a4d8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 3
-  nm: Oberon's Sword
-  moneyValue: 0
+  id: 11
 --- !u!61 &5885686182796256370
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -179,9 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ca02ed6a9301748bbb411f80a4d8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
-  nm: Nero's Pizza
-  moneyValue: 0
+  id: 7
 --- !u!61 &7128735381272114398
 BoxCollider2D:
   m_ObjectHideFlags: 0

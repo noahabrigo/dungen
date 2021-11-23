@@ -47,6 +47,7 @@ public class TileDraw : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StateController.floorNum = StateController.floorNum + 1;
         texture = generateMap(minNodes, maxNodes, minSize, maxSize, padding);
         tilemap = GetComponent<Tilemap>();
         loadMap(texture, tilemap);
@@ -59,7 +60,6 @@ public class TileDraw : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log(tilemap.WorldToCell(StateController.getPlayer()).x + " " + tilemap.WorldToCell(StateController.getPlayer()).y);
     }
 
     void loadMap(Texture2D texture, Tilemap tilemap)
@@ -143,7 +143,7 @@ public class TileDraw : MonoBehaviour
             node[i].nearestY = 255;
             node[i].touching = true;
 
-            if (diceRoll(3)) {node[i].items = true;}
+            if (diceRoll(4)) {node[i].items = true;}
         }
 
         for(int i = 0; i < numOfNodes; i++)
@@ -222,11 +222,10 @@ public class TileDraw : MonoBehaviour
                 int numItems = 1;
                 if (diceRoll(3)) { 
                     numItems++;
-                    if (diceRoll(3)) { 
+                    if (diceRoll(4)) { 
                         numItems++;
-                        if (diceRoll(3))
-                        {
-                            numItems = 4;
+                        if (diceRoll(4)) {
+                            numItems++;
                             if (diceRoll(5)) {
                                 numItems++; 
                             }
