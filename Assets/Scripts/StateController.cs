@@ -5,6 +5,11 @@ using UnityEngine.Tilemaps;
 
 public class StateController : MonoBehaviour
 {
+    public static Texture2D texture;
+    public static Tilemap tilemap;
+
+
+
     public struct InventoryItem {
         public int id;
         public int attack;
@@ -22,6 +27,20 @@ public class StateController : MonoBehaviour
         public int belly;
         public string name;
         public string desc;
+    }
+
+    public struct Enemy
+    {
+        public int id;
+        public string name;
+        public int maxHealth;
+        public int minHealth;
+        public string attack;
+        public int maxAttack;
+        public int minAttack;
+        public string superAttack;
+        public int maxSuper;
+        public int minSuper;
     }
 
     public static InventoryItem[] inventory = new InventoryItem[10] { 
@@ -53,23 +72,31 @@ public class StateController : MonoBehaviour
         new Items() { id = 11, type = 3, value = 125, attack = 25, uses = 50, health = 0, belly = 0, name = "Oberon's Sword", desc = "One of the most rarest and highest caliber swords."}
     };
 
+    public static Enemy[] enemies = new Enemy[2] {
+        new Enemy() {id = 0, name = "", maxHealth = 0, minHealth = 0, attack = "", maxAttack = 0, minAttack = 0, superAttack = "", maxSuper = 0, minSuper = 0},
+        new Enemy() {id = 1, name = "Lil' Knight", maxHealth = 16, minHealth = 9, attack = "Butterknife", maxAttack = 10, minAttack = 5, superAttack = "Serrated Blade", maxSuper = 20, minSuper = 10}
+    };
+
     public static int money = 0;
     public static int floorNum = 0;
     public static int equipped = -1;
     public static int health = 25;
-    public static int maxHealth = 10;
+    public static int maxHealth = 50;
     public static int belly = 10;
     public static int maxBelly = 50;
-    public static int attack = 5;
+    public static int attack = 15;
     public static bool halt = false;
+    public static bool dead = false;
+    public static string statusText;
 
     public static float lvlHealthMult = 0.11f;
     public static float lvlAttackMult = 0.08f;
 
-    static Vector3 spawn = new Vector3(0, 0);
-    static Vector3 stairs = new Vector3(0, 0);
-    static Vector3 cel = new Vector3(0, 0);
-    static Vector3 player = new Vector3(0, 0, 0);
+    public static Vector3 spawn = new Vector3(0, 0, 0);
+    public static Vector3 stairs = new Vector3(0, 0, 0);
+    public static Vector3Int cell = new Vector3Int(0, 0, 0);
+    public static Vector3Int nextCell = new Vector3Int(0, 0, 0);
+    public static Vector3 player = new Vector3(0, 0, 0);
     public static bool playerInit = true;
     public static bool stairsInit = true;
 
@@ -93,14 +120,14 @@ public class StateController : MonoBehaviour
         return stairs;
     }
 
-    public static void setCel(float x, float y)
+    public static void setCell(int x, int y)
     {
-        cel.x = x;
-        cel.y = y;
+        cell.x = x;
+        cell.y = y;
     }
-    public static Vector3 getCel()
+    public static Vector3Int getCell()
     {
-        return cel;
+        return cell;
     }
 
     public static void setPlayer(float x, float y)
@@ -111,6 +138,71 @@ public class StateController : MonoBehaviour
     public static Vector3 getPlayer()
     {
         return player;
+    }
+    public static Vector3Int getPlayerInt()
+    {
+        Vector3Int temp = new Vector3Int((int)player.x,(int)player.y,0);
+        return temp;
+    }
+
+    public static void takeDamage(int amount){
+        if(amount > health){
+            health = 0;
+            dead = true;
+            Debug.Log("YOU LOSE.");
+        }else{
+            health -= amount;
+        }
+    }
+
+    public static void addHealth(int amount){
+        if(amount + health >= maxHealth){
+            health = maxHealth;
+        }else{
+            health += amount;
+        }
+    }
+    public static void addBelly(int amount){
+        if(amount + belly >= maxBelly){
+            health = maxBelly;
+        }else{
+            belly += amount;
+        }
+    }
+
+    public static void takeBelly(int amount){
+        if(amount > belly){
+            belly = 0;
+        }else{
+            belly -= amount;
+        }
+    }
+
+    public static bool diceRoll (int odds)
+    {
+        int num = Random.Range(0,odds);
+        if (num == 0) { return true; }
+        else { return false; }
+    }
+
+    public static void deleteInventory(int index)
+    {
+        if (invIndex > 0) { 
+            invIndex--;
+            if (index == equipped) { equipped = -1; }
+            if (index < equipped) { equipped--;  }
+        }
+
+        for (int i = index; i < inventory.Length - 1; i++)
+        {
+            int next = i + 1;
+            inventory[i].id = inventory[next].id;
+            inventory[i].attack = inventory[next].attack;
+            inventory[i].uses = inventory[next].uses;
+        }
+        inventory[inventory.Length - 1].id = 0;
+        inventory[inventory.Length - 1].attack = 0;
+        inventory[inventory.Length - 1].uses = 0;
     }
 
 }

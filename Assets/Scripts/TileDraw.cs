@@ -14,7 +14,7 @@ public class TileDraw : MonoBehaviour
         public int nearestX;
         public int nearestY;
         public bool touching;
-        public int numEnemies;
+        public bool enemies;
         public bool items;
         public bool shop;
         public bool spawn;
@@ -28,6 +28,19 @@ public class TileDraw : MonoBehaviour
     public int maxSize = 15;
     public int padding = 25;
     public Item[] item;
+    public Enemy[] enemy;
+
+    int numCoins = 0;
+    int numGreen = 0;
+    int numBlue = 0;
+    int numRed = 0;
+    int numDonut = 0;
+    int numBurger = 0;
+    int numPizza = 0;
+    int numWoodSword = 0;
+    int numPhantomSword = 0;
+    int numSteelSword = 0;
+    int numOberonSword = 0;
 
     public Vector3Int test = new Vector3Int(0,0,0);
 
@@ -48,9 +61,13 @@ public class TileDraw : MonoBehaviour
     void Start()
     {
         StateController.floorNum = StateController.floorNum + 1;
-        texture = generateMap(minNodes, maxNodes, minSize, maxSize, padding);
-        tilemap = GetComponent<Tilemap>();
-        loadMap(texture, tilemap);
+        //for(int i = 0; i < 25; i++)
+        //{
+            StateController.texture = generateMap(minNodes, maxNodes, minSize, maxSize, padding);
+            StateController.tilemap = GetComponent<Tilemap>();
+            loadMap(StateController.texture, StateController.tilemap);
+        //}
+        Debug.Log("Coins: " + numCoins + " Green: " + numGreen + " Blue: " + numBlue + " Red: " + numRed + " Donut: " + numDonut + " Burger: " + numBurger + " Pizza: " + numPizza + " Wood Sword: " + numWoodSword + " Phantom Sword: " + numPhantomSword + " Steel Sword: " + numSteelSword + " Oberon Sword: " + numOberonSword);
     }
 
     // Update is called once per frame
@@ -96,18 +113,52 @@ public class TileDraw : MonoBehaviour
             {
                 tileArray[i] = tile[2];
                 StateController.setSpawn(tilemap.GetCellCenterWorld(positions[i]).x, tilemap.GetCellCenterWorld(positions[i]).y);
+                StateController.cell = tilemap.WorldToCell(tilemap.GetCellCenterWorld(positions[i]));
+                StateController.nextCell = StateController.cell;
             }
             else if (curPixel == color[3])
             {
                 tileArray[i] = tile[0];
                 StateController.setStairs(tilemap.GetCellCenterWorld(positions[i]).x, tilemap.GetCellCenterWorld(positions[i]).y);
             }
+            else if (curPixel == color[4])
+            {
+                tileArray[i] = tile[2];
+                Instantiate(enemy[0], tilemap.GetCellCenterWorld(positions[i]), Quaternion.identity);
+            }
             else if (curPixel == color[5])
             {
                 tileArray[i] = tile[2];
-                Instantiate(item[Random.Range(0,11)], tilemap.GetCellCenterWorld(positions[i]),Quaternion.identity);
+                int id = 0;
+                int type = 1;
+                if (diceRoll(5)) { type = 2; }
+                if (diceRoll(10)) { type = 3; }
+                if (type == 1)
+                {
+                    id = 0; //coin
+                    if (diceRoll(3)) { id = 1; numGreen++; }//emerald
+                    if (diceRoll(10)) { id = 2; numBlue++; }//sapphire
+                    if (diceRoll(15)) { id = 3; numRed++; }//ruby
+                    if (id == 0) { numCoins++; }
+                }
+                else if (type == 2)
+                {
+                    id = 4; // Donut
+                    if (diceRoll(5)) { id = 5; numBurger++; }//burger
+                    if (diceRoll(10)) { id = 6; numPizza++; }//pizza
+                    if (id == 4) { numDonut++; }
+                }
+                else if (type == 3)
+                {
+                    id = 7; //Wooden sword
+                    if (diceRoll(5)) { id = 8; numPhantomSword++; }//Phantom sword
+                    if (diceRoll(15)) { id = 9; numSteelSword++; } //Steel sword
+                    if (diceRoll(25)) { id = 10; numOberonSword++; }//Oberon's sword
+                    if (id == 7) { numWoodSword++; }
+                }
+                Instantiate(item[id], tilemap.GetCellCenterWorld(positions[i]), Quaternion.identity);
             }
-            else if(curPixel == color[6])
+            else if (curPixel == color[6])
             {
                 tileArray[i] = tile[8];
             }
@@ -119,7 +170,6 @@ public class TileDraw : MonoBehaviour
             }
         }
         tilemap.SetTiles(positions, tileArray);
-        //init = true;
     }
 
     Texture2D generateMap(int minNodes, int maxNodes, int minSize, int maxSize, int padding)
@@ -143,7 +193,8 @@ public class TileDraw : MonoBehaviour
             node[i].nearestY = 255;
             node[i].touching = true;
 
-            if (diceRoll(4)) {node[i].items = true;}
+            if (diceRoll(2)) { node[i].items = true; }
+            if (diceRoll(2)) { node[i].enemies = true; }
         }
 
         for(int i = 0; i < numOfNodes; i++)
@@ -217,31 +268,48 @@ public class TileDraw : MonoBehaviour
 
         for (int i = 0; i < numOfNodes; i++)
         {
-            if(node[i].items)
+
+            //Drawing items in a single node
+            if (node[i].items) //If node.items is true, draw number of items to screen based on rarity.
             {
                 int numItems = 1;
-                if (diceRoll(3)) { 
-                    numItems++;
-                    if (diceRoll(4)) { 
-                        numItems++;
-                        if (diceRoll(4)) {
-                            numItems++;
-                            if (diceRoll(5)) {
-                                numItems++; 
+                if (diceRoll(2)) { numItems++;
+                    if (diceRoll(3)) { numItems++;
+                        if (diceRoll(3)) {numItems++;
+                            if (diceRoll(5)) {numItems++; 
                             }
                         }
                     }
                 }
-                for(int j = 0; j < numItems; j++)
+                for(int j = 0; j < numItems; j++) //Drawing items pixels
                 {
-                    texture.SetPixel(node[i].x + Random.Range(0, node[i].width), node[i].y + Random.Range(0, node[i].height), color[5]);
+                        texture.SetPixel(node[i].x + Random.Range(0, node[i].width), node[i].y + Random.Range(0, node[i].height), color[5]);
                 }
             }
-            if (node[i].spawn)
+
+            //Drawing enemies in a single node
+            if(node[i].enemies) //If node.enemies is true, draw number of enemies to screen based on rarity.
+            {
+                int numEnemies = 1;
+                if (diceRoll(2)) { numEnemies++;
+                    if (diceRoll(2)) { numEnemies++;
+                        if (diceRoll(3)) { numEnemies++;
+                            if (diceRoll(4)) { numEnemies++; 
+                            }
+                        }
+                    }
+                }
+                for(int j = 0; j < numEnemies; j++) //Drawing enemy pixels
+                {
+                        texture.SetPixel(node[i].x + Random.Range(0, node[i].width), node[i].y + Random.Range(0, node[i].height), color[4]);
+                }
+            }
+
+            if (node[i].spawn) //Drawing spawn pixel
             {
                     texture.SetPixel(node[i].x + Random.Range(0, node[i].width), node[i].y + Random.Range(0, node[i].height), color[2]);
             }
-            if (node[i].stairs)
+            if (node[i].stairs) //Drawing stairs pixel
             {
                     texture.SetPixel(node[i].x + Random.Range(0, node[i].width), node[i].y + Random.Range(0, node[i].height), color[3]);
             }

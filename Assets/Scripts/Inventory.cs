@@ -128,8 +128,8 @@ public class Inventory : MonoBehaviour
             else{ itemLabel[i].color = unequipped; }
         }
         int inttype = StateController.items[StateController.inventory[cursorPos].id].type;
-        int intuses = StateController.items[StateController.inventory[cursorPos].id].uses;
-        int intattack = StateController.items[StateController.inventory[cursorPos].id].attack;
+        int intuses = StateController.inventory[cursorPos].uses;
+        int intattack = StateController.inventory[cursorPos].attack;
         string txttype;
         string txtuses;
         string txtattack;
@@ -150,7 +150,7 @@ public class Inventory : MonoBehaviour
         statDesc.text = txtdesc;
     }
 
-    void deleteInventory(int index)
+    public void deleteInventory(int index)
     {
         if (StateController.invIndex > 0) { 
             StateController.invIndex--;

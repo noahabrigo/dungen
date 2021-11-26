@@ -11,8 +11,15 @@ public class PlayerController : MonoBehaviour
     Vector2 lookDirection = new Vector2(0, -1);
     Vector2Int curCel = new Vector2Int(0,0);
     int move = 1;
+    bool init = false;
 
     Animator animator;
+
+    Vector3 position;
+    Vector3 position2 = new Vector3(0, 0, 0);
+
+    float hungerTimer = 5.0f;
+    float maxHungerTimer = 5.0f;
 
     void Start()
     {
@@ -90,11 +97,28 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 position = rigidbody2d.position;
+        if (!init)
+        {
+            position = StateController.getSpawn();
+            position2 = position;
+            StateController.cell = StateController.tilemap.WorldToCell(position);
+            init = true;
+        }
+        position = rigidbody2d.position;
         position.x = position.x + speed * horizontal * Time.deltaTime * move;
         position.y = position.y + speed * vertical * Time.deltaTime * move;
         rigidbody2d.MovePosition(position);
-
         StateController.setPlayer(rigidbody2d.position.x, rigidbody2d.position.y);
+
+        hungerTimer -= Time.deltaTime;
+        if(hungerTimer <= 0){
+            if(StateController.belly == 0){
+                StateController.takeDamage(1);
+            }else{
+                StateController.addHealth(1);
+                StateController.takeBelly(1);
+            }
+            hungerTimer = maxHungerTimer;
+        }
     }
 }
