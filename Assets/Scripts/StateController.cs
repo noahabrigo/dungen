@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 public class StateController : MonoBehaviour
 {
@@ -44,18 +45,18 @@ public class StateController : MonoBehaviour
     }
 
     public static InventoryItem[] inventory = new InventoryItem[10] { 
-        new InventoryItem() { id = 8, attack = 20, uses = 10},
-        new InventoryItem() { id = 9, attack = 100, uses = 8},
-        new InventoryItem() { id = 5, attack = 0, uses = 1},
-        new InventoryItem() { id = 6, attack = 0, uses = 1},
-        new InventoryItem() { id = 7, attack = 0, uses = 1},
-        new InventoryItem() { id = 11, attack = 300, uses = 40},
+        new InventoryItem() { id = 0, attack = 0, uses = 0},
+        new InventoryItem() { id = 0, attack = 0, uses = 0},
+        new InventoryItem() { id = 0, attack = 0, uses = 0},
+        new InventoryItem() { id = 0, attack = 0, uses = 0},
+        new InventoryItem() { id = 0, attack = 0, uses = 0},
+        new InventoryItem() { id = 0, attack = 0, uses = 0},
         new InventoryItem() { id = 0, attack = 0, uses = 0},
         new InventoryItem() { id = 0, attack = 0, uses = 0},
         new InventoryItem() { id = 0, attack = 0, uses = 0},
         new InventoryItem() { id = 0, attack = 0, uses = 0}
     };
-    public static int invIndex = 6;
+    public static int invIndex = 0;
 
     public static Items[] items = new Items[12] {
         new Items() { id = 0, type = 0, value = 0, attack = 0, uses = 0, health = 0, belly = 0, name = "Empty", desc = "Nothing to see here."},
@@ -66,31 +67,37 @@ public class StateController : MonoBehaviour
         new Items() { id = 5, type = 2, value = 5, attack = 0, uses = 1, health = 0, belly = 10, name = "Odin's Donut", desc = "It is said that this is the daily breakfast of Odin. +10 belly"},
         new Items() { id = 6, type = 2, value = 10, attack = 0, uses = 1, health = 0, belly = 25, name = "Magic Burger", desc = "Nobody knows the origins of this magical sandwich of german origin. +25 belly"},
         new Items() { id = 7, type = 2, value = 20, attack = 0, uses = 1, health = 0, belly = 50, name = "Nero's Pizza", desc = "The last remnants of pizza from Nero Caesar's reign. +FULL belly"},
-        new Items() { id = 8, type = 3, value = 10, attack = 10, uses = 20, health = 0, belly = 0, name = "Wooden Sword", desc = "This sword was made from the pegleg of dead pirates."},
-        new Items() { id = 9, type = 3, value = 25, attack = 10, uses = 15, health = 0, belly = 0, name = "Phantom Sword", desc = "Magical sword that sends out beams of pure energy."},
-        new Items() { id = 10, type = 3, value = 50, attack = 15, uses = 30, health = 0, belly = 0, name = "Steel Sword", desc = "Sword made from the strongest of steel."},
-        new Items() { id = 11, type = 3, value = 125, attack = 25, uses = 50, health = 0, belly = 0, name = "Oberon's Sword", desc = "One of the most rarest and highest caliber swords."}
+        new Items() { id = 8, type = 3, value = 10, attack = 25, uses = 20, health = 0, belly = 0, name = "Wooden Sword", desc = "This sword was made from the pegleg of dead pirates."},
+        new Items() { id = 9, type = 3, value = 25, attack = 30, uses = 15, health = 0, belly = 0, name = "Phantom Sword", desc = "Magical sword that sends out beams of pure energy."},
+        new Items() { id = 10, type = 3, value = 50, attack = 35, uses = 50, health = 0, belly = 0, name = "Steel Sword", desc = "Sword made from the strongest of steel."},
+        new Items() { id = 11, type = 3, value = 125, attack = 100, uses = -1, health = 0, belly = 0, name = "Oberon's Sword", desc = "One of the most rarest and highest caliber swords."}
     };
 
-    public static Enemy[] enemies = new Enemy[2] {
+    public static Enemy[] enemies = new Enemy[3] {
         new Enemy() {id = 0, name = "", maxHealth = 0, minHealth = 0, attack = "", maxAttack = 0, minAttack = 0, superAttack = "", maxSuper = 0, minSuper = 0},
-        new Enemy() {id = 1, name = "Lil' Knight", maxHealth = 16, minHealth = 9, attack = "Butterknife", maxAttack = 10, minAttack = 5, superAttack = "Serrated Blade", maxSuper = 20, minSuper = 10}
+        new Enemy() {id = 1, name = "Lil' Knight", maxHealth = 35, minHealth = 20, attack = "Butterknife", maxAttack = 15, minAttack = 10, superAttack = "Serrated Blade", maxSuper = 25, minSuper = 15},
+        new Enemy() {id = 2, name = "Big Knight", maxHealth = 50, minHealth = 35, attack = "Joust", maxAttack = 25, minAttack = 15, superAttack = "Battle Axe", maxSuper = 30, minSuper = 20}
     };
 
     public static int money = 0;
     public static int floorNum = 0;
     public static int equipped = -1;
-    public static int health = 25;
-    public static int maxHealth = 50;
-    public static int belly = 10;
-    public static int maxBelly = 50;
-    public static int attack = 15;
+    public static int baseHealth = 100;
+    public static int health = 100;
+    public static int maxHealth = 100;
+    public static int belly = 60;
+    public static int maxBelly = 60;
+    public static int baseAttack = 20;
+    public static int attack = 20;
     public static bool halt = false;
     public static bool dead = false;
     public static string statusText;
 
-    public static float lvlHealthMult = 0.11f;
-    public static float lvlAttackMult = 0.08f;
+    public static float lvlHealthMult = 0.01f;
+    public static float lvlItemMult = 0.05f;
+    public static float lvlAttackMult = 0.03f;
+    public static float lvlEnemyAttackMult = 0.09f;
+    public static float lvlEnemyHealthMult = 0.06f;
 
     public static Vector3 spawn = new Vector3(0, 0, 0);
     public static Vector3 stairs = new Vector3(0, 0, 0);
@@ -149,7 +156,7 @@ public class StateController : MonoBehaviour
         if(amount > health){
             health = 0;
             dead = true;
-            Debug.Log("YOU LOSE.");
+            SceneManager.LoadScene("Game Over"); 
         }else{
             health -= amount;
         }

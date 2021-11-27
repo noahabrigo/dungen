@@ -19,8 +19,9 @@ public class Item : MonoBehaviour
             {
                 if (StateController.invIndex < StateController.inventory.Length)
                 {
+                    float attackMult = StateController.items[id].attack * (1 + (StateController.lvlItemMult * StateController.floorNum));
                     StateController.inventory[StateController.invIndex].id = id;
-                    StateController.inventory[StateController.invIndex].attack = StateController.items[id].attack;
+                    StateController.inventory[StateController.invIndex].attack =  (int)attackMult;
                     StateController.inventory[StateController.invIndex].uses = StateController.items[id].uses;
                     StateController.invIndex++;
                     Destroy(gameObject);

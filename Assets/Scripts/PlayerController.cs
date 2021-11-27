@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
         StateController.playerInit = true;
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
+        StateController.halt = false;
     }
 
     // Update is called once per frame

@@ -25,11 +25,14 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         name = StateController.enemies[id].name;
-        health = Random.Range(StateController.enemies[id].minHealth, StateController.enemies[id].maxHealth);
+        float healthMult = Random.Range(StateController.enemies[id].minHealth, StateController.enemies[id].maxHealth) * (1 + (StateController.lvlEnemyHealthMult * StateController.floorNum));
+        float attackMult = Random.Range(StateController.enemies[id].minAttack, StateController.enemies[id].maxAttack) * (1 + (StateController.lvlEnemyAttackMult * StateController.floorNum));
+        float superMult = Random.Range(StateController.enemies[id].minSuper, StateController.enemies[id].maxSuper) * (1 + (StateController.lvlEnemyAttackMult * StateController.floorNum));
+        health = (int)healthMult;
         attackName = StateController.enemies[id].attack;
-        attack = Random.Range(StateController.enemies[id].minAttack, StateController.enemies[id].maxAttack);
+        attack = (int)attackMult;
         superName = StateController.enemies[id].attack;
-        superAttack = Random.Range(StateController.enemies[id].minSuper, StateController.enemies[id].maxSuper);
+        superAttack = (int)superMult;
 
         rigidbody2d = GetComponent<Rigidbody2D>();
     }
@@ -71,7 +74,7 @@ public class Enemy : MonoBehaviour
                 else{
                     if(StateController.equipped == -1){
                         takeDamage(StateController.attack);
-                        StateController.statusText =  "You used bare claws. " + name + " took " + StateController.attack + " damage.";
+                        StateController.statusText =  "You used bear claws. " + name + " took " + StateController.attack + " damage.";
                     }else{
                         int atk = StateController.inventory[StateController.equipped].attack;
                         takeDamage(atk);
