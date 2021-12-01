@@ -7,6 +7,8 @@ public class TextBox : MonoBehaviour
 {
     public Text status;
     bool scroll = false;
+    float timer = 3.0f;
+    float maxTimer = 3.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,17 @@ public class TextBox : MonoBehaviour
     {
         if(!scroll){
             status.text = StateController.statusText;
+        }
+    }
+
+    void FixedUpdate(){
+        if(StateController.eraseText){
+            timer -= Time.deltaTime;
+            if(timer <= 0.0f){
+                StateController.statusText = "";
+                StateController.eraseText = false;
+                timer = maxTimer;
+            }
         }
     }
 }

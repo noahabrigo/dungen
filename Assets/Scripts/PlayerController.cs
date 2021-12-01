@@ -18,8 +18,8 @@ public class PlayerController : MonoBehaviour
     Vector3 position;
     Vector3 position2 = new Vector3(0, 0, 0);
 
-    float hungerTimer = 5.0f;
-    float maxHungerTimer = 5.0f;
+    float hungerTimer = 3.0f;
+    float maxHungerTimer = 3.0f;
 
     void Start()
     {
@@ -116,7 +116,9 @@ public class PlayerController : MonoBehaviour
             if(StateController.belly == 0){
                 StateController.takeDamage(1);
             }else{
-                StateController.addHealth(1);
+                float healthMult = 2 * (1.0f + 0.1f * StateController.floorNum);
+                int health = (int)healthMult;
+                StateController.addHealth(health);
                 StateController.takeBelly(1);
             }
             hungerTimer = maxHungerTimer;

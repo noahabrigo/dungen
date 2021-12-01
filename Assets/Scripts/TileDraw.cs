@@ -29,7 +29,7 @@ public class TileDraw : MonoBehaviour
     public int padding = 25;
     public Item[] item;
     public Enemy[] enemy;
-
+    public GameObject shop;
     int numCoins = 0;
     int numGreen = 0;
     int numBlue = 0;
@@ -41,33 +41,35 @@ public class TileDraw : MonoBehaviour
     int numPhantomSword = 0;
     int numSteelSword = 0;
     int numOberonSword = 0;
+    int numGoldKnight = 0;
 
     public Vector3Int test = new Vector3Int(0,0,0);
 
     public TileBase[] tile = new TileBase[1];
     Texture2D texture;
     Tilemap tilemap;
-    Color[] color = new Color[7] {
+    Color[] color = new Color[8] {
         new Color(0,0,0,0),         //  Blackness
         new Color(1,1,1,1),         //  Walkable area
         new Color(0,0,1,1),         //  Player Spawn
         new Color(0,1,0,1),         //  Stairs
         new Color(1,0,0,1),         //  Enemy
         new Color(1,1,0,1),         //  Item
-        new Color(1,0,1,1)          //  Wall
+        new Color(1,0,1,1),         //  Wall
+        new Color(0,1,1,1)          //  Shop
     };
 
     // Start is called before the first frame update
     void Start()
     {
-        StateController.floorNum = StateController.floorNum + 1;
-        //for(int i = 0; i < 25; i++)
-        //{
+        //for(int i = 0; i < 50; i++){
+            StateController.floorNum = StateController.floorNum + 1;
             StateController.texture = generateMap(minNodes, maxNodes, minSize, maxSize, padding);
             StateController.tilemap = GetComponent<Tilemap>();
             loadMap(StateController.texture, StateController.tilemap);
+            Debug.Log("Coins: " + numCoins + " Green: " + numGreen + " Blue: " + numBlue + " Red: " + numRed + " Donut: " + numDonut + " Burger: " + numBurger + " Pizza: " + numPizza + " Wood Sword: " + numWoodSword + " Phantom Sword: " + numPhantomSword + " Steel Sword: " + numSteelSword + " Oberon Sword: " + numOberonSword + " Gold Knight: " + numGoldKnight);
         //}
-        Debug.Log("Coins: " + numCoins + " Green: " + numGreen + " Blue: " + numBlue + " Red: " + numRed + " Donut: " + numDonut + " Burger: " + numBurger + " Pizza: " + numPizza + " Wood Sword: " + numWoodSword + " Phantom Sword: " + numPhantomSword + " Steel Sword: " + numSteelSword + " Oberon Sword: " + numOberonSword);
+        
     }
 
     // Update is called once per frame
@@ -124,7 +126,18 @@ public class TileDraw : MonoBehaviour
             else if (curPixel == color[4])
             {
                 tileArray[i] = tile[2];
-                Instantiate(enemy[0], tilemap.GetCellCenterWorld(positions[i]), Quaternion.identity);
+                int enemyNum = 0;
+                if(StateController.floorNum >= 0 && StateController.floorNum < 10){
+                    if(diceRoll(3)){ enemyNum = 1; }
+                }
+                if(StateController.floorNum >= 10 && StateController.floorNum < 25){
+                    if(diceRoll(2)){ enemyNum = 1; }
+                }
+                if(StateController.floorNum >= 25){
+                    enemyNum = 1;
+                }
+                if(diceRoll(250)){ enemyNum = 2; numGoldKnight++; }
+                Instantiate(enemy[enemyNum], tilemap.GetCellCenterWorld(positions[i]), Quaternion.identity);
             }
             else if (curPixel == color[5])
             {
@@ -135,25 +148,25 @@ public class TileDraw : MonoBehaviour
                 if (diceRoll(10)) { type = 3; }
                 if (type == 1)
                 {
-                    id = 0; //coin
-                    if (diceRoll(3)) { id = 1; numGreen++; }//emerald
-                    if (diceRoll(10)) { id = 2; numBlue++; }//sapphire
-                    if (diceRoll(15)) { id = 3; numRed++; }//ruby
+                    id = 1; //coin
+                    //if (diceRoll(3)) { id = 1; numGreen++; }    //emerald
+                    if (diceRoll(5)) { id = 2; numBlue++; }    //sapphire
+                    if (diceRoll(10)) { id = 3; numRed++; }     //ruby
                     if (id == 0) { numCoins++; }
                 }
                 else if (type == 2)
                 {
                     id = 4; // Donut
-                    if (diceRoll(5)) { id = 5; numBurger++; }//burger
-                    if (diceRoll(10)) { id = 6; numPizza++; }//pizza
+                    if (diceRoll(5)) { id = 5; numBurger++; }   //burger
+                    if (diceRoll(15)) { id = 6; numPizza++; }   //pizza
                     if (id == 4) { numDonut++; }
                 }
                 else if (type == 3)
                 {
-                    id = 7; //Wooden sword
-                    if (diceRoll(5)) { id = 8; numPhantomSword++; }//Phantom sword
-                    if (diceRoll(15)) { id = 9; numSteelSword++; } //Steel sword
-                    if (diceRoll(25)) { id = 10; numOberonSword++; }//Oberon's sword
+                    id = 7;                                              //Wooden sword
+                    if (diceRoll(10)) { id = 8; numPhantomSword++; }     //Phantom sword
+                    if (diceRoll(20)) { id = 9; numSteelSword++; }       //Steel sword
+                    if (diceRoll(50)) { id = 10; numOberonSword++; }     //Oberon's sword
                     if (id == 7) { numWoodSword++; }
                 }
                 Instantiate(item[id], tilemap.GetCellCenterWorld(positions[i]), Quaternion.identity);
@@ -162,10 +175,15 @@ public class TileDraw : MonoBehaviour
             {
                 tileArray[i] = tile[8];
             }
+            else if (curPixel == color[7])
+            {
+                tileArray[i] = tile[2];
+                Instantiate(shop, tilemap.GetCellCenterWorld(positions[i]), Quaternion.identity);
+            }
             else
             {
                 tileArray[i] = tile[1];
-                if (diceRoll(5)) { tileArray[i] = tile[7]; }
+                if (diceRoll(5))  { tileArray[i] = tile[7]; }
                 if (diceRoll(10)) { tileArray[i] = tile[6]; }
             }
         }
@@ -179,8 +197,10 @@ public class TileDraw : MonoBehaviour
         Node[] node = new Node[numOfNodes];
         int playerSpawn = Random.Range(0, numOfNodes);
         int stairs = Random.Range(0, numOfNodes);
+        int shop = Random.Range(0, numOfNodes);
         node[playerSpawn].spawn = true;
         node[stairs].stairs = true;
+        if(StateController.diceRoll(5)){node[shop].shop = true;}
 
         //Node placement
         for(int i = 0; i < numOfNodes; i++)
@@ -194,7 +214,7 @@ public class TileDraw : MonoBehaviour
             node[i].touching = true;
 
             if (diceRoll(2)) { node[i].items = true; }
-            if (diceRoll(2)) { node[i].enemies = true; }
+            if (!node[i].spawn && !node[i].shop && diceRoll(2)) { node[i].enemies = true; }
         }
 
         for(int i = 0; i < numOfNodes; i++)
@@ -274,7 +294,7 @@ public class TileDraw : MonoBehaviour
             {
                 int numItems = 1;
                 if (diceRoll(2)) { numItems++;
-                    if (diceRoll(3)) { numItems++;
+                    if (diceRoll(2)) { numItems++;
                         if (diceRoll(3)) {numItems++;
                             if (diceRoll(5)) {numItems++; 
                             }
@@ -292,8 +312,8 @@ public class TileDraw : MonoBehaviour
             {
                 int numEnemies = 1;
                 if (diceRoll(2)) { numEnemies++;
-                    if (diceRoll(2)) { numEnemies++;
-                        if (diceRoll(3)) { numEnemies++;
+                    if (diceRoll(3)) { numEnemies++;
+                        if (diceRoll(4)) { numEnemies++;
                             if (diceRoll(4)) { numEnemies++; 
                             }
                         }
@@ -303,6 +323,11 @@ public class TileDraw : MonoBehaviour
                 {
                         texture.SetPixel(node[i].x + Random.Range(0, node[i].width), node[i].y + Random.Range(0, node[i].height), color[4]);
                 }
+            }
+
+            if (node[i].shop) //Drawing shop pixel
+            {
+                    texture.SetPixel(node[i].x + Random.Range(2, node[i].width-2), node[i].y + Random.Range(2, node[i].height-2), color[7]);
             }
 
             if (node[i].spawn) //Drawing spawn pixel

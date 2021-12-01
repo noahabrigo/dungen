@@ -13,6 +13,8 @@ public class Item : MonoBehaviour
             if(StateController.items[id].type == 1)
             {
                 StateController.money += StateController.items[id].value;
+                StateController.statusText = "You picked up " + StateController.items[id].name;
+                StateController.eraseText = true;
                 Destroy(gameObject);
             }
             else
@@ -24,7 +26,12 @@ public class Item : MonoBehaviour
                     StateController.inventory[StateController.invIndex].attack =  (int)attackMult;
                     StateController.inventory[StateController.invIndex].uses = StateController.items[id].uses;
                     StateController.invIndex++;
+                    StateController.statusText = "You picked up " + StateController.items[id].name;
+                    StateController.eraseText = true;
                     Destroy(gameObject);
+                }else{
+                    StateController.statusText = "Inventory is full";
+                    StateController.eraseText = true;
                 }
             }
         }

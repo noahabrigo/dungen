@@ -17,7 +17,11 @@ public class GameOver : MonoBehaviour
         if (Input.GetKey(KeyCode.R))
         {
             StateController.floorNum = 0;
-            StateController.health = StateController.maxHealth;
+            StateController.health = StateController.baseHealth;
+            StateController.maxHealth = StateController.baseHealth;
+            StateController.attack = StateController.baseAttack;
+            StateController.belly = StateController.maxBelly;
+            StateController.statusText = "";
             SceneManager.LoadScene("Dungeon"); 
         }
     }

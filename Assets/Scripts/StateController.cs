@@ -42,6 +42,7 @@ public class StateController : MonoBehaviour
         public string superAttack;
         public int maxSuper;
         public int minSuper;
+        public int drop;
     }
 
     public static InventoryItem[] inventory = new InventoryItem[10] { 
@@ -58,25 +59,35 @@ public class StateController : MonoBehaviour
     };
     public static int invIndex = 0;
 
-    public static Items[] items = new Items[12] {
+    public static InventoryItem[] shop = new InventoryItem[3] { 
+        new InventoryItem() { id = 0, attack = 0, uses = 0},
+        new InventoryItem() { id = 0, attack = 0, uses = 0},
+        new InventoryItem() { id = 0, attack = 0, uses = 0}
+    };
+    public static int shopIndex = 0;
+
+    public static Items[] items = new Items[14] {
         new Items() { id = 0, type = 0, value = 0, attack = 0, uses = 0, health = 0, belly = 0, name = "Empty", desc = "Nothing to see here."},
         new Items() { id = 1, type = 1, value = 1, attack = 0, uses = 0, health = 0, belly = 0, name = "Gold Coin", desc = ""},
         new Items() { id = 2, type = 1, value = 5, attack = 0, uses = 0, health = 0, belly = 0, name = "Emerald", desc = ""},
         new Items() { id = 3, type = 1, value = 10, attack = 0, uses = 0, health = 0, belly = 0, name = "Sapphire", desc = ""},
         new Items() { id = 4, type = 1, value = 20, attack = 0, uses = 0, health = 0, belly = 0, name = "Ruby", desc = ""},
-        new Items() { id = 5, type = 2, value = 5, attack = 0, uses = 1, health = 0, belly = 10, name = "Odin's Donut", desc = "It is said that this is the daily breakfast of Odin. +10 belly"},
-        new Items() { id = 6, type = 2, value = 10, attack = 0, uses = 1, health = 0, belly = 25, name = "Magic Burger", desc = "Nobody knows the origins of this magical sandwich of german origin. +25 belly"},
-        new Items() { id = 7, type = 2, value = 20, attack = 0, uses = 1, health = 0, belly = 50, name = "Nero's Pizza", desc = "The last remnants of pizza from Nero Caesar's reign. +FULL belly"},
-        new Items() { id = 8, type = 3, value = 10, attack = 25, uses = 20, health = 0, belly = 0, name = "Wooden Sword", desc = "This sword was made from the pegleg of dead pirates."},
-        new Items() { id = 9, type = 3, value = 25, attack = 30, uses = 15, health = 0, belly = 0, name = "Phantom Sword", desc = "Magical sword that sends out beams of pure energy."},
-        new Items() { id = 10, type = 3, value = 50, attack = 35, uses = 50, health = 0, belly = 0, name = "Steel Sword", desc = "Sword made from the strongest of steel."},
-        new Items() { id = 11, type = 3, value = 125, attack = 100, uses = -1, health = 0, belly = 0, name = "Oberon's Sword", desc = "One of the most rarest and highest caliber swords."}
+        new Items() { id = 5, type = 2, value = 75, attack = 0, uses = 1, health = 10, belly = 20, name = "Odin's Donut", desc = "It is said that this is the daily breakfast of Odin. +20 BEL +10 HP "},
+        new Items() { id = 6, type = 2, value = 100, attack = 0, uses = 1, health = 25, belly = 30, name = "Magic Burger", desc = "Nobody knows the origins of this magical sandwich of german origin. +30 BEL +25 HP"},
+        new Items() { id = 7, type = 2, value = 125, attack = 0, uses = 1, health = 50, belly = -1, name = "Nero's Pizza", desc = "The last remnants of pizza from Nero Caesar's reign. +FULL BEL +50 HP"},
+        new Items() { id = 8, type = 3, value = 250, attack = 20, uses = 10, health = 0, belly = 0, name = "Wooden Sword", desc = "This sword was made from the pegleg of dead pirates."},
+        new Items() { id = 9, type = 3, value = 325, attack = 25, uses = 15, health = 0, belly = 0, name = "Phantom Sword", desc = "Magical sword that sends out beams of pure energy."},
+        new Items() { id = 10, type = 3, value = 500, attack = 35, uses = 25, health = 0, belly = 0, name = "Steel Sword", desc = "Sword made from the strongest of steel."},
+        new Items() { id = 11, type = 3, value = 999, attack = 55, uses = -1, health = 0, belly = 0, name = "Oberon's Sword", desc = "One of the most rarest and highest caliber swords."},
+        new Items() { id = 12, type = 3, value = 999, attack = 50, uses = 75, health = 0, belly = 0, name = "Golden Sword", desc = "Golden item dropped by golden knights. Wow! Kinda Rare."},
+        new Items() { id = 13, type = 2, value = 175, attack = 0, uses = 1, health = -1, belly = -1, name = "Tift's Carrot", desc = "Max health and belly. Only sold in shop."}
     };
 
-    public static Enemy[] enemies = new Enemy[3] {
-        new Enemy() {id = 0, name = "", maxHealth = 0, minHealth = 0, attack = "", maxAttack = 0, minAttack = 0, superAttack = "", maxSuper = 0, minSuper = 0},
-        new Enemy() {id = 1, name = "Lil' Knight", maxHealth = 35, minHealth = 20, attack = "Butterknife", maxAttack = 15, minAttack = 10, superAttack = "Serrated Blade", maxSuper = 25, minSuper = 15},
-        new Enemy() {id = 2, name = "Big Knight", maxHealth = 50, minHealth = 35, attack = "Joust", maxAttack = 25, minAttack = 15, superAttack = "Battle Axe", maxSuper = 30, minSuper = 20}
+    public static Enemy[] enemies = new Enemy[4] {
+        new Enemy() {id = 0, name = "", maxHealth = 0, minHealth = 0, attack = "", maxAttack = 0, minAttack = 0, superAttack = "", maxSuper = 0, minSuper = 0, drop = 0},
+        new Enemy() {id = 1, name = "Lil' Knight", maxHealth = 50, minHealth = 40, attack = "Butterknife", maxAttack = 25, minAttack = 20, superAttack = "Serrated Blade", maxSuper = 35, minSuper = 25, drop = 5},
+        new Enemy() {id = 2, name = "Big Knight", maxHealth = 60, minHealth = 50, attack = "Joust", maxAttack = 30, minAttack = 25, superAttack = "Battle Axe", maxSuper = 35, minSuper = 30, drop = 3},
+        new Enemy() {id = 3, name = "Gold Knight", maxHealth = 100, minHealth = 60, attack = "Fancy Joust", maxAttack = 30, minAttack = 20, superAttack = "Gold Thrust", maxSuper = 50, minSuper = 30, drop = 0}
     };
 
     public static int money = 0;
@@ -92,12 +103,15 @@ public class StateController : MonoBehaviour
     public static bool halt = false;
     public static bool dead = false;
     public static string statusText;
+    public static bool eraseText = false;
+    public static bool inShop = false;
+    public static bool transaction = false;
 
-    public static float lvlHealthMult = 0.01f;
+    public static float lvlHealthMult = 0.015f;
     public static float lvlItemMult = 0.05f;
     public static float lvlAttackMult = 0.03f;
-    public static float lvlEnemyAttackMult = 0.09f;
-    public static float lvlEnemyHealthMult = 0.06f;
+    public static float lvlEnemyAttackMult = 0.05f;
+    public static float lvlEnemyHealthMult = 0.04f;
 
     public static Vector3 spawn = new Vector3(0, 0, 0);
     public static Vector3 stairs = new Vector3(0, 0, 0);

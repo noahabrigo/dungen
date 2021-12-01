@@ -30,7 +30,7 @@ public class Inventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && !StateController.inShop)
         {
             if (!toggle)
             {
@@ -87,13 +87,21 @@ public class Inventory : MonoBehaviour
             int itemType = StateController.items[StateController.inventory[cursorPos].id].type;
             int itemUses = StateController.inventory[cursorPos].uses;
             int itemBelly = StateController.items[StateController.inventory[cursorPos].id].belly;
+            int itemHealth = StateController.items[StateController.inventory[cursorPos].id].health;
             if (itemType == 2)
             {
-                if (StateController.belly + itemBelly > StateController.maxBelly) { StateController.belly = StateController.maxBelly; }
-                else { StateController.belly += itemBelly; }
+                if (StateController.belly + itemBelly > StateController.maxBelly) { StateController.belly = StateController.maxBelly;}
+                else if (itemBelly == -1) { StateController.belly = StateController.maxBelly;}
+                else { StateController.belly += itemBelly;}
+
+                if(itemHealth == -1){
+                    StateController.addHealth(StateController.maxHealth);
+                }else{
+                    StateController.addHealth(itemHealth);
+                }
                 
                 itemUses--;
-                if (itemUses == 0)
+                if (itemUses <= 0)
                 {
                     deleteInventory(cursorPos);
                     UpdateInventory();

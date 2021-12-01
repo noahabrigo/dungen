@@ -11,10 +11,13 @@ public class Enemy : MonoBehaviour
     int attack;
     string superName;
     int superAttack;
+    int dropChance;
     bool dead;
     bool turn = false;
     float timer = 0.0f;
-    float maxTimer = 3.0f;
+    float maxTimer = 2.0f;
+
+    public Item[] drop;
 
     public EnemyAttackRadius attackRadius;
     public EnemyProximityRadius proximityRadius;
@@ -33,6 +36,7 @@ public class Enemy : MonoBehaviour
         attack = (int)attackMult;
         superName = StateController.enemies[id].attack;
         superAttack = (int)superMult;
+        dropChance = StateController.enemies[id].drop;
 
         rigidbody2d = GetComponent<Rigidbody2D>();
     }
@@ -47,8 +51,9 @@ public class Enemy : MonoBehaviour
         {
             player = StateController.getPlayerInt();
             enemy = rigidbody2d.position;
-            rigidbody2d.MovePosition(Vector3.MoveTowards(enemy, player, 0.05f));
-            StateController.statusText = "You encountered " + name + ".";
+            rigidbody2d.MovePosition(Vector3.MoveTowards(enemy, player, 0.06f));
+            StateController.statusText = "You encountered " + name + ". " + health + " HP. " + attack + " ATK";
+            StateController.eraseText = true;
         }
         else if (attackRadius.attack)
         {
@@ -56,9 +61,19 @@ public class Enemy : MonoBehaviour
 
             if(timer <= 0.0f){
             if(dead){ 
+                if(StateController.diceRoll(dropChance)){
+                    int itemDrop = 0;
+                    for(int i = 0; i < drop.Length; i++){
+                        if(StateController.diceRoll(i)){
+                            itemDrop = i;
+                        }
+                    }
+                    Instantiate(drop[itemDrop], enemy, Quaternion.identity);
+                }
                 Destroy(gameObject);
                 StateController.halt = false;
-                StateController.statusText = "";
+                StateController.statusText = name + " has fainted.";
+                StateController.eraseText = true;
             }else{
                 int attackChoiceDmg = attack;
                 string attackChoiceName = attackName;
