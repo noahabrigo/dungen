@@ -1,5 +1,4 @@
 # dungen
-DunGen
 
 Explore the mystery dungeons. Defeat enemies and collect items to become more powerful. The difficulty of the game gets hard as you progress through the dungeons. Every dungeon is uniquely and randomly generated.
 
